@@ -23,4 +23,6 @@ public:
     void displayStations();
 };
 
+void preloadData(RailwayNetwork &network);
+
 #endif
