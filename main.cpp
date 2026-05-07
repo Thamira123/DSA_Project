@@ -3,16 +3,20 @@
 int main() {
 
     RailwayNetwork network;
-    preloadData(network);  // Auto load Sri Lanka railway data
+    preloadData(network);
 
     int choice;
 
     while (true) {
-        cout << "\n====== Sri Lanka Railway Network Optimization ======\n";
+
+        cout << "\n========================================\n";
+        cout << "   SRI LANKA RAILWAY OPTIMIZATION\n";
+        cout << "========================================\n";
         cout << "1. Display All Stations\n";
         cout << "2. Find Shortest Route\n";
         cout << "3. Exit\n";
-        cout << "Enter choice: ";
+        cout << "----------------------------------------\n";
+        cout << "Enter your choice: ";
         cin >> choice;
 
         if (choice == 1) {

@@ -21,6 +21,10 @@ void RailwayNetwork::addTrack(string from, string to, int distance) {
     graph[v].push_back({u, distance});
 }
 
+int RailwayNetwork::getStationCount() {
+    return indexToStation.size();
+}
+
 // ✅ Dijkstra Algorithm
 // Time Complexity: O((V + E) log V)
 void RailwayNetwork::shortestPath(string source, string destination) {
@@ -67,12 +71,39 @@ void RailwayNetwork::shortestPath(string source, string destination) {
         return;
     }
 
-    int costPerKm = 4; // Example cost per km (LKR)
-    int totalCost = dist[end] * costPerKm;
+    // ✅ Travel Time Calculation (50 km/h)
+    double speed = 50.0;
+    double totalHours = dist[end] / speed;
 
-    cout << "\n====== ROUTE DETAILS ======\n";
-    cout << "Distance: " << dist[end] << " km\n";
-    cout << "Estimated Ticket Cost: LKR " << totalCost << endl;
+    int hours = (int)totalHours;
+    int minutes = (totalHours - hours) * 60;
+
+    // ✅ Class Selection
+    int classChoice;
+    double costPerKm;
+
+    cout << "\nSelect Travel Class:\n";
+    cout << "1. First Class (LKR 8 per km)\n";
+    cout << "2. Second Class (LKR 5 per km)\n";
+    cout << "3. Third Class (LKR 3 per km)\n";
+    cout << "Enter choice: ";
+    cin >> classChoice;
+
+    if (classChoice == 1)
+        costPerKm = 8;
+    else if (classChoice == 2)
+        costPerKm = 5;
+    else
+        costPerKm = 3;
+
+    double totalCost = dist[end] * costPerKm;
+
+    cout << "\n========== ROUTE DETAILS ==========\n";
+    cout << "Distance           : " << dist[end] << " km\n";
+    cout << "Estimated Time     : " << hours << " hours "
+         << minutes << " minutes\n";
+    cout << "Total Ticket Cost  : LKR " << fixed << setprecision(2)
+         << totalCost << endl;
 
     vector<int> path;
     for (int v = end; v != -1; v = parent[v])
@@ -80,7 +111,7 @@ void RailwayNetwork::shortestPath(string source, string destination) {
 
     reverse(path.begin(), path.end());
 
-    cout << "Route: ";
+    cout << "Route              : ";
     for (int i = 0; i < path.size(); i++) {
         cout << indexToStation[path[i]];
         if (i != path.size() - 1)
@@ -90,15 +121,15 @@ void RailwayNetwork::shortestPath(string source, string destination) {
 }
 
 void RailwayNetwork::displayStations() {
-    cout << "\nAvailable Sri Lankan Railway Stations:\n";
+    cout << "\nTotal Stations: " << getStationCount() << endl;
+    cout << "----------------------------------\n";
     for (auto station : indexToStation)
         cout << "- " << station << endl;
 }
 
-// ✅ Preloaded Sri Lanka Railway Data
+// ✅ Sri Lanka Railway Data
 void preloadData(RailwayNetwork &network) {
 
-    // Add Stations
     string stations[] = {
         "ColomboFort","Maradana","Ragama","Gampaha","Veyangoda",
         "Polgahawela","Peradeniya","Kandy","Nawalapitiya","Hatton",
@@ -110,7 +141,6 @@ void preloadData(RailwayNetwork &network) {
     for (string s : stations)
         network.addStation(s);
 
-    // Main Line
     network.addTrack("ColomboFort","Maradana",2);
     network.addTrack("Maradana","Ragama",14);
     network.addTrack("Ragama","Gampaha",10);
@@ -123,7 +153,6 @@ void preloadData(RailwayNetwork &network) {
     network.addTrack("Hatton","NanuOya",32);
     network.addTrack("NanuOya","Badulla",65);
 
-    // Coastal Line
     network.addTrack("ColomboFort","Panadura",27);
     network.addTrack("Panadura","KalutaraSouth",13);
     network.addTrack("KalutaraSouth","Aluthgama",24);
@@ -132,7 +161,6 @@ void preloadData(RailwayNetwork &network) {
     network.addTrack("Hikkaduwa","Galle",20);
     network.addTrack("Galle","Matara",45);
 
-    // Northern Line
     network.addTrack("Polgahawela","Kurunegala",42);
     network.addTrack("Kurunegala","Anuradhapura",100);
     network.addTrack("Anuradhapura","Vavuniya",60);
